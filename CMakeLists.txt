@@ -19,6 +19,10 @@
 PROJECT("paho" C)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
+SET(Platform "linux" CACHE STRING "linux")
+
+MESSAGE( STATUS "Platform cocosdk : " ${Platform} )
+
 ## build settings
 SET(PAHO_VERSION_MAJOR 1)
 SET(PAHO_VERSION_MINOR 0)

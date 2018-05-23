@@ -23,6 +23,13 @@ SET(Platform "linux" CACHE STRING "linux")
 
 MESSAGE( STATUS "Platform cocosdk : " ${Platform} )
 
+if(${Platform} STREQUAL "osx")
+  link_directories(/usr/local/lib/)
+elseif(${Platform} STREQUAL "ios")
+  link_directories(/usr/local/elear-solutions/iphones/lib)
+  include_directories(/usr/local/elear-solutions/iphones/include)
+endif()
+
 ## build settings
 SET(PAHO_VERSION_MAJOR 1)
 SET(PAHO_VERSION_MINOR 0)

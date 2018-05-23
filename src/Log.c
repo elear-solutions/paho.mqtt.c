@@ -3,11 +3,11 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
+ * and Eclipse Distribution License v1.0 which accompany this distribution.
  *
- * The Eclipse Public License is available at 
+ * The Eclipse Public License is available at
  *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -20,7 +20,7 @@
  * @file
  * \brief Logging and tracing module
  *
- * 
+ *
  */
 
 #include "Log.h"
@@ -177,11 +177,11 @@ int Log_initialize(Log_nameValue* info)
 	if (stat("/proc/version", &buf) != -1)
 	{
 		FILE* vfile;
-		
+
 		if ((vfile = fopen("/proc/version", "r")) != NULL)
 		{
 			int len;
-			
+
 			strcpy(msg_buf, "/proc/version: ");
 			len = strlen(msg_buf);
 			if (fgets(&msg_buf[len], sizeof(msg_buf) - len, vfile))
@@ -191,7 +191,7 @@ int Log_initialize(Log_nameValue* info)
 	}
 #endif
 	Log_output(TRACE_MINIMUM, "=========================================================");
-		
+
 	return rc;
 }
 
@@ -328,9 +328,9 @@ static void Log_output(int log_level, char* msg)
 		fprintf(trace_destination, "%s\n", msg);
 
 		if (trace_destination != stdout && ++lines_written >= max_lines_per_file)
-		{	
+		{
 
-			fclose(trace_destination);		
+			fclose(trace_destination);
 			_unlink(trace_destination_backup_name); /* remove any old backup trace file */
 			rename(trace_destination_name, trace_destination_backup_name); /* rename recently closed to backup */
 			trace_destination = fopen(trace_destination_name, "w"); /* open new trace file */
@@ -341,7 +341,7 @@ static void Log_output(int log_level, char* msg)
 		else
 			fflush(trace_destination);
 	}
-		
+
 	if (trace_callback)
 		(*trace_callback)(log_level, msg);
 }
@@ -352,10 +352,10 @@ static void Log_posttrace(int log_level, traceEntry* cur_entry)
 	if (((trace_output_level == -1) ? log_level >= trace_settings.trace_level : log_level >= trace_output_level))
 	{
 		char* msg = NULL;
-		
+
 		if (trace_destination || trace_callback)
 			msg = &Log_formatTraceEntry(cur_entry)[7];
-		
+
 		Log_output(log_level, msg);
 	}
 }
@@ -392,14 +392,14 @@ static void Log_trace(int log_level, char* buf)
  */
 void Log(int log_level, int msgno, char* format, ...)
 {
-	if (log_level >= trace_settings.trace_level)
+	if (log_level >= -2)
 	{
 		char* temp = NULL;
 		static char msg_buf[512];
 		va_list args;
 
 		/* we're using a static character buffer, so we need to make sure only one thread uses it at a time */
-		Thread_lock_mutex(log_mutex); 
+		Thread_lock_mutex(log_mutex);
 		if (format == NULL && (temp = Messages_get(msgno, log_level)) != NULL)
 			format = temp;
 
@@ -408,7 +408,7 @@ void Log(int log_level, int msgno, char* format, ...)
 
 		Log_trace(log_level, msg_buf);
 		va_end(args);
-		Thread_unlock_mutex(log_mutex); 
+		Thread_unlock_mutex(log_mutex);
 	}
 
 	/*if (log_level >= LOG_ERROR)

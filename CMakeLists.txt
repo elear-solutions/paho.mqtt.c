@@ -23,7 +23,7 @@ SET(Platform "linux" CACHE STRING "linux")
 
 MESSAGE( STATUS "Platform cocosdk : " ${Platform} )
 
-if(${Platform} STREQUAL "osx")
+if(${Platform} STREQUAL "mac")
   link_directories(/usr/local/lib/)
 elseif(${Platform} STREQUAL "ios")
   link_directories(/usr/local/elear-solutions/iphones/lib)

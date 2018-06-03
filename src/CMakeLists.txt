@@ -13,6 +13,7 @@
 #  Contributors:
 #     Rainer Poisel - initial version
 #*******************************************************************************/
+set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -fPIC")
 
 # Note: on OS X you should install XCode and the associated command-line tools
 
@@ -55,9 +56,17 @@ ENDIF()
 
 ADD_EXECUTABLE(MQTTVersion MQTTVersion.c)
 ADD_LIBRARY(paho-mqtt3c SHARED ${common_src} MQTTClient.c)
+ADD_LIBRARY(paho-mqtt3c_static STATIC ${common_src} MQTTClient.c)
 ADD_LIBRARY(paho-mqtt3a SHARED ${common_src} MQTTAsync.c)
-TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
-TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
+if(${Platform} STREQUAL "android")
+  TARGET_LINK_LIBRARIES(paho-mqtt3c ${LIBS_SYSTEM}) 
+  TARGET_LINK_LIBRARIES(paho-mqtt3c_static ${LIBS_SYSTEM})
+  TARGET_LINK_LIBRARIES(paho-mqtt3a ${LIBS_SYSTEM})
+elseif(NOT ${Platform} STREQUAL "android")
+  TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
+  TARGET_LINK_LIBRARIES(paho-mqtt3c_static pthread ${LIBS_SYSTEM}) 
+  TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
+endif()
 TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
 SET_TARGET_PROPERTIES(
     paho-mqtt3c paho-mqtt3a PROPERTIES
@@ -66,6 +75,9 @@ SET_TARGET_PROPERTIES(
 INSTALL(TARGETS paho-mqtt3c paho-mqtt3a MQTTVersion
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib)
+
+INSTALL(TARGETS paho-mqtt3c_static DESTINATION lib)
+
 INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h
     DESTINATION include)
 

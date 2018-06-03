@@ -3,11 +3,11 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
+ * and Eclipse Distribution License v1.0 which accompany this distribution.
  *
- * The Eclipse Public License is available at 
+ * The Eclipse Public License is available at
  *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -106,7 +106,7 @@ void* MQTTPacket_Factory(networkHandles* net, int* error)
 
 	/* read the packet data from the socket */
 #if defined(OPENSSL)
-	*error = (net->ssl) ? SSLSocket_getch(net->ssl, net->socket, &header.byte) : Socket_getch(net->socket, &header.byte); 
+	*error = (net->ssl) ? SSLSocket_getch(net->ssl, net->socket, &header.byte) : Socket_getch(net->socket, &header.byte);
 #else
 	*error = Socket_getch(net->socket, &header.byte);
 #endif
@@ -119,7 +119,7 @@ void* MQTTPacket_Factory(networkHandles* net, int* error)
 
 	/* now read the rest, the variable header and payload */
 #if defined(OPENSSL)
-	data = (net->ssl) ? SSLSocket_getdata(net->ssl, net->socket, remaining_length, &actual_len) : 
+	data = (net->ssl) ? SSLSocket_getdata(net->ssl, net->socket, remaining_length, &actual_len) :
 						Socket_getdata(net->socket, remaining_length, &actual_len);
 #else
 	data = Socket_getdata(net->socket, remaining_length, &actual_len);
@@ -136,7 +136,7 @@ void* MQTTPacket_Factory(networkHandles* net, int* error)
 	{
 		ptype = header.bits.type;
 		if (ptype < CONNECT || ptype > DISCONNECT || new_packets[ptype] == NULL)
-			Log(TRACE_MIN, 2, NULL, ptype);
+			Log(TRACE_MAX, 2, NULL, ptype);
 		else
 		{
 			if ((pack = (*new_packets[ptype])(header.byte, data, remaining_length)) == NULL)
@@ -197,10 +197,10 @@ int MQTTPacket_send(networkHandles* net, Header header, char* buffer, size_t buf
 	else
 #endif
 		rc = Socket_putdatas(net->socket, buf, buf0len, 1, &buffer, &buflen, &free);
-		
+
 	if (rc == TCPSOCKET_COMPLETE)
 		time(&(net->lastSent));
-	
+
 	if (rc != TCPSOCKET_INTERRUPTED)
 	  free(buf);
 
@@ -245,10 +245,10 @@ int MQTTPacket_sends(networkHandles* net, Header header, int count, char** buffe
 	else
 #endif
 		rc = Socket_putdatas(net->socket, buf, buf0len, count, buffers, buflens, frees);
-		
+
 	if (rc == TCPSOCKET_COMPLETE)
 		time(&(net->lastSent));
-	
+
 	if (rc != TCPSOCKET_INTERRUPTED)
 	  free(buf);
 	FUNC_EXIT_RC(rc);

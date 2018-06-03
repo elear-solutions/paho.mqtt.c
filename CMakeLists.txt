@@ -19,6 +19,17 @@
 PROJECT("paho" C)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
+SET(Platform "linux" CACHE STRING "linux")
+
+MESSAGE( STATUS "Platform cocosdk : " ${Platform} )
+
+if(${Platform} STREQUAL "mac")
+  link_directories(/usr/local/lib/)
+elseif(${Platform} STREQUAL "ios")
+  link_directories(/usr/local/elear-solutions/iphones/lib)
+  include_directories(/usr/local/elear-solutions/iphones/include)
+endif()
+
 ## build settings
 SET(PAHO_VERSION_MAJOR 1)
 SET(PAHO_VERSION_MINOR 0)
@@ -27,6 +38,9 @@ SET(CLIENT_VERSION ${PAHO_VERSION_MAJOR}.${PAHO_VERSION_MINOR}.${PAHO_VERSION_PA
 
 EXECUTE_PROCESS(COMMAND date -u OUTPUT_VARIABLE BUILD_TIMESTAMP)
 STRING(STRIP ${BUILD_TIMESTAMP} BUILD_TIMESTAMP)
+IF(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+  ADD_DEFINITIONS(-DOSX)
+ENDIF()
 
 ## build options
 SET(PAHO_WITH_SSL FALSE CACHE BOOL "Flag that defines whether to build ssl-enabled binaries too. ")

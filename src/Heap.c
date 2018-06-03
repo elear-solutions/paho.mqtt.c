@@ -3,11 +3,11 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
+ * and Eclipse Distribution License v1.0 which accompany this distribution.
  *
- * The Eclipse Public License is available at 
+ * The Eclipse Public License is available at
  *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -175,7 +175,7 @@ void* mymalloc(char* file, int line, size_t size)
 	state.current_size += size;
 	if (state.current_size > state.max_size)
 		state.max_size = state.current_size;
-	Thread_unlock_mutex(heap_mutex);		
+	Thread_unlock_mutex(heap_mutex);
 	return ((int*)(s->ptr)) + 1;	/* skip start eyecatcher */
 }
 
@@ -275,7 +275,7 @@ void *myrealloc(char* file, int line, void* p, size_t size)
 {
 	void* rc = NULL;
 	storageElement* s = NULL;
-	
+
 	Thread_lock_mutex(heap_mutex);
 	s = TreeRemoveKey(&heap, ((int*)p)-1);
 	if (s == NULL)
@@ -336,7 +336,7 @@ void* Heap_findItem(void* p)
 void HeapScan(int log_level)
 {
 	Node* current = NULL;
-	
+
 	Thread_lock_mutex(heap_mutex);
 	Log(log_level, -1, "Heap scan start, total %d bytes", state.current_size);
 	while ((current = TreeNextElement(&heap, current)) != NULL)
@@ -366,7 +366,7 @@ int Heap_initialize()
  */
 void Heap_terminate()
 {
-	Log(TRACE_MIN, -1, "Maximum heap use was %d bytes", state.max_size);
+	Log(TRACE_MAX, -1, "Maximum heap use was %d bytes", state.max_size);
 	if (state.current_size > 20) /* One log list is freed after this function is called */
 	{
 		Log(LOG_ERROR, -1, "Some memory not freed at shutdown, possible memory leak");

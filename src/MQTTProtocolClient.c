@@ -3,11 +3,11 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
+ * and Eclipse Distribution License v1.0 which accompany this distribution.
  *
- * The Eclipse Public License is available at 
+ * The Eclipse Public License is available at
  *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -76,7 +76,7 @@ int MQTTProtocol_assignMsgId(Clients* client)
 	while (ListFindItem(client->outboundMsgs, &msgid, messageIDCompare) != NULL)
 	{
 		msgid = (msgid == MAX_MSG_ID) ? 1 : msgid + 1;
-		if (msgid == start_msgid) 
+		if (msgid == start_msgid)
 		{ /* we've tried them all - none free */
 			msgid = 0;
 			break;
@@ -97,7 +97,7 @@ void MQTTProtocol_storeQoS0(Clients* pubclient, Publish* publish)
 	FUNC_ENTRY;
 	/* store the publication until the write is finished */
 	pw = malloc(sizeof(pending_write));
-	Log(TRACE_MIN, 12, NULL);
+	Log(TRACE_MAX, 12, NULL);
 	pw->p = MQTTProtocol_storePublication(publish, &len);
 	pw->socket = pubclient->net.socket;
 	ListAppend(&(state.pending_writes), pw, sizeof(pending_write)+len);
@@ -321,15 +321,15 @@ int MQTTProtocol_handlePubacks(void* pack, int sock)
 
 	/* look for the message by message id in the records of outbound messages for this client */
 	if (ListFindItem(client->outboundMsgs, &(puback->msgId), messageIDCompare) == NULL)
-		Log(TRACE_MIN, 3, NULL, "PUBACK", client->clientID, puback->msgId);
+		Log(TRACE_MAX, 3, NULL, "PUBACK", client->clientID, puback->msgId);
 	else
 	{
 		Messages* m = (Messages*)(client->outboundMsgs->current->content);
 		if (m->qos != 1)
-			Log(TRACE_MIN, 4, NULL, "PUBACK", client->clientID, puback->msgId, m->qos);
+			Log(TRACE_MAX, 4, NULL, "PUBACK", client->clientID, puback->msgId, m->qos);
 		else
 		{
-			Log(TRACE_MIN, 6, NULL, "PUBACK", client->clientID, puback->msgId);
+			Log(TRACE_MAX, 6, NULL, "PUBACK", client->clientID, puback->msgId);
 			#if !defined(NO_PERSISTENCE)
 				rc = MQTTPersistence_remove(client, PERSISTENCE_PUBLISH_SENT, m->qos, puback->msgId);
 			#endif
@@ -364,7 +364,7 @@ int MQTTProtocol_handlePubrecs(void* pack, int sock)
 	if (ListFindItem(client->outboundMsgs, &(pubrec->msgId), messageIDCompare) == NULL)
 	{
 		if (pubrec->header.bits.dup == 0)
-			Log(TRACE_MIN, 3, NULL, "PUBREC", client->clientID, pubrec->msgId);
+			Log(TRACE_MAX, 3, NULL, "PUBREC", client->clientID, pubrec->msgId);
 	}
 	else
 	{
@@ -372,12 +372,12 @@ int MQTTProtocol_handlePubrecs(void* pack, int sock)
 		if (m->qos != 2)
 		{
 			if (pubrec->header.bits.dup == 0)
-				Log(TRACE_MIN, 4, NULL, "PUBREC", client->clientID, pubrec->msgId, m->qos);
+				Log(TRACE_MAX, 4, NULL, "PUBREC", client->clientID, pubrec->msgId, m->qos);
 		}
 		else if (m->nextMessageType != PUBREC)
 		{
 			if (pubrec->header.bits.dup == 0)
-				Log(TRACE_MIN, 5, NULL, "PUBREC", client->clientID, pubrec->msgId);
+				Log(TRACE_MAX, 5, NULL, "PUBREC", client->clientID, pubrec->msgId);
 		}
 		else
 		{
@@ -412,7 +412,7 @@ int MQTTProtocol_handlePubrels(void* pack, int sock)
 	if (ListFindItem(client->inboundMsgs, &(pubrel->msgId), messageIDCompare) == NULL)
 	{
 		if (pubrel->header.bits.dup == 0)
-			Log(TRACE_MIN, 3, NULL, "PUBREL", client->clientID, pubrel->msgId);
+			Log(TRACE_MAX, 3, NULL, "PUBREL", client->clientID, pubrel->msgId);
 		else
 			/* Apparently this is "normal" behaviour, so we don't need to issue a warning */
 			rc = MQTTPacket_send_pubcomp(pubrel->msgId, &client->net, client->clientID);
@@ -421,9 +421,9 @@ int MQTTProtocol_handlePubrels(void* pack, int sock)
 	{
 		Messages* m = (Messages*)(client->inboundMsgs->current->content);
 		if (m->qos != 2)
-			Log(TRACE_MIN, 4, NULL, "PUBREL", client->clientID, pubrel->msgId, m->qos);
+			Log(TRACE_MAX, 4, NULL, "PUBREL", client->clientID, pubrel->msgId, m->qos);
 		else if (m->nextMessageType != PUBREL)
-			Log(TRACE_MIN, 5, NULL, "PUBREL", client->clientID, pubrel->msgId);
+			Log(TRACE_MAX, 5, NULL, "PUBREL", client->clientID, pubrel->msgId);
 		else
 		{
 			Publish publish;
@@ -472,20 +472,20 @@ int MQTTProtocol_handlePubcomps(void* pack, int sock)
 	if (ListFindItem(client->outboundMsgs, &(pubcomp->msgId), messageIDCompare) == NULL)
 	{
 		if (pubcomp->header.bits.dup == 0)
-			Log(TRACE_MIN, 3, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
+			Log(TRACE_MAX, 3, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
 	}
 	else
 	{
 		Messages* m = (Messages*)(client->outboundMsgs->current->content);
 		if (m->qos != 2)
-			Log(TRACE_MIN, 4, NULL, "PUBCOMP", client->clientID, pubcomp->msgId, m->qos);
+			Log(TRACE_MAX, 4, NULL, "PUBCOMP", client->clientID, pubcomp->msgId, m->qos);
 		else
 		{
 			if (m->nextMessageType != PUBCOMP)
-				Log(TRACE_MIN, 5, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
+				Log(TRACE_MAX, 5, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
 			else
 			{
-				Log(TRACE_MIN, 6, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
+				Log(TRACE_MAX, 6, NULL, "PUBCOMP", client->clientID, pubcomp->msgId);
 				#if !defined(NO_PERSISTENCE)
 					rc = MQTTPersistence_remove(client, PERSISTENCE_PUBLISH_SENT, m->qos, pubcomp->msgId);
 				#endif
@@ -514,7 +514,7 @@ void MQTTProtocol_keepalive(time_t now)
 	while (current)
 	{
 		Clients* client =	(Clients*)(current->content);
-		ListNextElement(bstate->clients, &current); 
+		ListNextElement(bstate->clients, &current);
 		if (client->connected && client->keepAliveInterval > 0 &&
 			(difftime(now, client->net.lastSent) >= client->keepAliveInterval ||
 					difftime(now, client->net.lastReceived) >= client->keepAliveInterval))
@@ -573,7 +573,7 @@ void MQTTProtocol_retries(time_t now, Clients* client, int regardless)
 				Publish publish;
 				int rc;
 
-				Log(TRACE_MIN, 7, NULL, "PUBLISH", client->clientID, client->net.socket, m->msgid);
+				Log(TRACE_MAX, 7, NULL, "PUBLISH", client->clientID, client->net.socket, m->msgid);
 				publish.msgId = m->msgid;
 				publish.topic = m->publish->topic;
 				publish.payload = m->publish->payload;
@@ -596,7 +596,7 @@ void MQTTProtocol_retries(time_t now, Clients* client, int regardless)
 			}
 			else if (m->qos && m->nextMessageType == PUBCOMP)
 			{
-				Log(TRACE_MIN, 7, NULL, "PUBREL", client->clientID, client->net.socket, m->msgid);
+				Log(TRACE_MAX, 7, NULL, "PUBREL", client->clientID, client->net.socket, m->msgid);
 				if (MQTTPacket_send_pubrel(m->msgid, 0, &client->net, client->clientID) != TCPSOCKET_COMPLETE)
 				{
 					client->good = 0;
@@ -733,9 +733,9 @@ char* MQTTStrncpy(char *dest, const char *src, size_t dest_size)
   size_t count = dest_size;
   char *temp = dest;
 
-  FUNC_ENTRY; 
+  FUNC_ENTRY;
   if (dest_size < strlen(src))
-    Log(TRACE_MIN, -1, "the src string is truncated");
+    Log(TRACE_MAX, -1, "the src string is truncated");
 
   /* We must copy only the first (dest_size - 1) bytes */
   while (count > 1 && (*temp++ = *src++))

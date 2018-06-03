@@ -3,11 +3,11 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
+ * and Eclipse Distribution License v1.0 which accompany this distribution.
  *
- * The Eclipse Public License is available at 
+ * The Eclipse Public License is available at
  *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -470,7 +470,7 @@ int Socket_putdatas(int socket, char* buf0, size_t buf0len, int count, char** bu
 		else
 		{
 			int* sockmem = (int*)malloc(sizeof(int));
-			Log(TRACE_MIN, -1, "Partial write: %ld bytes of %d actually written on socket %d",
+			Log(TRACE_MAX, -1, "Partial write: %ld bytes of %d actually written on socket %d",
 					bytes, total, socket);
 #if defined(OPENSSL)
 			SocketBuffer_pendingWrite(socket, NULL, count+1, iovecs, frees1, total, bytes);
@@ -492,7 +492,7 @@ exit:
 /**
  *  Add a socket to the pending write list, so that it is checked for writing in select.  This is used
  *  in connect processing when the TCP connect is incomplete, as we need to check the socket for both
- *  ready to read and write states. 
+ *  ready to read and write states.
  *  @param socket the socket to add
  */
 void Socket_addPendingWrite(int socket)
@@ -559,7 +559,7 @@ void Socket_close(int socket)
 	SocketBuffer_cleanup(socket);
 
 	if (ListRemoveItem(s.clientsds, &socket, intcompare))
-		Log(TRACE_MIN, -1, "Removed socket %d", socket);
+		Log(TRACE_MAX, -1, "Removed socket %d", socket);
 	else
 		Log(LOG_ERROR, -1, "Failed to remove socket %d", socket);
 	if (socket + 1 >= s.maxfdp1)
@@ -660,7 +660,7 @@ int Socket_new(char* addr, int port, int* sock)
 				Log(LOG_ERROR, -1, "Could not set SO_NOSIGPIPE for socket %d", *sock);
 #endif
 
-			Log(TRACE_MIN, -1, "New socket %d for %s, port %d",	*sock, addr, port);
+			Log(TRACE_MAX, -1, "New socket %d for %s, port %d",	*sock, addr, port);
 			if (Socket_addSocket(*sock) == SOCKET_ERROR)
 				rc = Socket_error("setnonblocking", *sock);
 			else
@@ -679,7 +679,7 @@ int Socket_new(char* addr, int port, int* sock)
 					int* pnewSd = (int*)malloc(sizeof(int));
 					*pnewSd = *sock;
 					ListAppend(s.connect_pending, pnewSd, sizeof(int));
-					Log(TRACE_MIN, 15, "Connect pending");
+					Log(TRACE_MAX, 15, "Connect pending");
 				}
 			}
 		}
@@ -712,13 +712,13 @@ int Socket_continueWrite(int socket)
 
 	FUNC_ENTRY;
 	pw = SocketBuffer_getWrite(socket);
-	
+
 #if defined(OPENSSL)
 	if (pw->ssl)
 	{
 		rc = SSLSocket_continueWrite(pw);
 		goto exit;
-	} 	
+	}
 #endif
 
 	for (i = 0; i < pw->count; ++i)
@@ -750,10 +750,10 @@ int Socket_continueWrite(int socket)
 				if (pw->frees[i])
 					free(pw->iovecs[i].iov_base);
 			}
-			Log(TRACE_MIN, -1, "ContinueWrite: partial write now complete for socket %d", socket);		
+			Log(TRACE_MAX, -1, "ContinueWrite: partial write now complete for socket %d", socket);
 		}
 		else
-			Log(TRACE_MIN, -1, "ContinueWrite wrote +%lu bytes on socket %d", bytes, socket);
+			Log(TRACE_MAX, -1, "ContinueWrite wrote +%lu bytes on socket %d", bytes, socket);
 	}
 #if defined(OPENSSL)
 exit:
@@ -788,7 +788,7 @@ int Socket_continueWrites(fd_set* pwset)
 				ListNextElement(s.write_pending, &curpending);
 			}
 			curpending = s.write_pending->current;
-						
+
 			if (writecomplete)
 				(*writecomplete)(socket);
 		}

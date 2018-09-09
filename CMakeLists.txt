@@ -24,6 +24,7 @@ MESSAGE(STATUS "CMake system name: " ${CMAKE_SYSTEM_NAME})
 
 SET(CMAKE_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake")
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+SET(Platform "linux" CACHE STRING "linux")
 
 ## build settings
 SET(PAHO_VERSION_MAJOR 1)
@@ -48,7 +49,7 @@ SET(PAHO_BUILD_STATIC TRUE CACHE BOOL "Build static library")
 SET(PAHO_BUILD_DOCUMENTATION FALSE CACHE BOOL "Create and install the HTML based API documentation (requires Doxygen)")
 SET(PAHO_BUILD_SAMPLES FALSE CACHE BOOL "Build sample programs")
 SET(PAHO_BUILD_DEB_PACKAGE FALSE CACHE BOOL "Build debian package")
-SET(PAHO_ENABLE_TESTING TRUE CACHE BOOL "Build tests and run")
+SET(PAHO_ENABLE_TESTING FALSE CACHE BOOL "Build tests and run")
 
 ADD_SUBDIRECTORY(src)
 IF(PAHO_BUILD_SAMPLES)

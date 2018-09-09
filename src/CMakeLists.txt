@@ -51,15 +51,18 @@ SET(common_src
 IF (WIN32)
     SET(LIBS_SYSTEM ws2_32)
 ELSEIF (UNIX)
-    IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-        SET(LIBS_SYSTEM c dl pthread)
+    IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+        IF (${Platform} STREQUAL "android")
+            SET(LIBS_SYSTEM c dl)
+        ELSE()
+            SET(LIBS_SYSTEM c dl pthread)
+        ENDIF()
     ELSEIF (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
         SET(LIBS_SYSTEM compat pthread)
     ELSE()
         SET(LIBS_SYSTEM c pthread)
     ENDIF()
 ENDIF()
-
 
 ## common compilation for libpaho-mqtt3c and libpaho-mqtt3a
 ADD_LIBRARY(common_obj OBJECT ${common_src})
@@ -89,6 +92,8 @@ INSTALL(TARGETS MQTTVersion
 IF (PAHO_BUILD_STATIC)
     ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)
     ADD_LIBRARY(paho-mqtt3a-static STATIC $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
+    SET_TARGET_PROPERTIES(paho-mqtt3c-static PROPERTIES COMPILE_FLAGS "-fPIC") 
+    SET_TARGET_PROPERTIES(paho-mqtt3a-static PROPERTIES COMPILE_FLAGS "-fPIC") 
 
     TARGET_LINK_LIBRARIES(paho-mqtt3c-static ${LIBS_SYSTEM})
     TARGET_LINK_LIBRARIES(paho-mqtt3a-static ${LIBS_SYSTEM})

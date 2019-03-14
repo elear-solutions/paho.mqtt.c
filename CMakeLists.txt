@@ -19,6 +19,10 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.4)
 PROJECT("Eclipse Paho C" C)
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  conan_basic_setup()
+endif()
 MESSAGE(STATUS "CMake version: " ${CMAKE_VERSION})
 MESSAGE(STATUS "CMake system name: " ${CMAKE_SYSTEM_NAME})
 

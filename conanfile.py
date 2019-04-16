@@ -2,7 +2,7 @@ from conans import ConanFile, CMake, tools
 
 
 class PahomqttclibConan(ConanFile):
-    name = "paho_mqtt_c"
+    name = "pahomqttc"
     version = "0.1"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
@@ -23,8 +23,11 @@ class PahomqttclibConan(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src="src")
-        self.copy("*", dst="lib", src="lib"keep_path=False)
+        self.copy("*", dst="lib", src="lib",keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["pahomqttc"]
+        self.cpp_info.libs = ["paho-mqtt3a"]
+        self.cpp_info.libs = ["paho-mqtt3a-static"]
+        self.cpp_info.libs = ["paho-mqtt3c"]
+        self.cpp_info.libs = ["paho-mqtt3c-static"]
 

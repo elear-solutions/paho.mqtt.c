@@ -1,6 +1,5 @@
 from conans import ConanFile, CMake, tools
 
-
 class PahomqttclibConan(ConanFile):
     name = "pahomqttc"
     version = "0.1"
@@ -17,17 +16,17 @@ class PahomqttclibConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         if (self.settings.os == "Android"):
-            cmake.definitions["Platform"] = "android"
+            cmake.definitions[ "Platform" ] = "android"
         cmake.configure(source_folder=".")
         cmake.build()
 
     def package(self):
         self.copy("*.h", dst="include", src="src")
-        self.copy("*", dst="lib", src="lib",keep_path=False)
+        self.copy("*", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["paho-mqtt3a"]
-        self.cpp_info.libs = ["paho-mqtt3a-static"]
-        self.cpp_info.libs = ["paho-mqtt3c"]
-        self.cpp_info.libs = ["paho-mqtt3c-static"]
+        self.cpp_info.libs = [ "paho-mqtt3a" ]
+        self.cpp_info.libs = [ "paho-mqtt3a-static" ]
+        self.cpp_info.libs = [ "paho-mqtt3c" ]
+        self.cpp_info.libs = [ "paho-mqtt3c-static" ]
 

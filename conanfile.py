@@ -6,7 +6,7 @@ class PahomqttclibConan(ConanFile):
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Elearcommonlib here>"
+    description = "<Description of pahomqttc here>"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
@@ -29,4 +29,3 @@ class PahomqttclibConan(ConanFile):
         self.cpp_info.libs = [ "paho-mqtt3a-static" ]
         self.cpp_info.libs = [ "paho-mqtt3c" ]
         self.cpp_info.libs = [ "paho-mqtt3c-static" ]
-

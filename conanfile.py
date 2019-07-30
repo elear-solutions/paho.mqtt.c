@@ -2,11 +2,11 @@ from conans import ConanFile, CMake, tools
 
 class PahomqttclibConan(ConanFile):
     name = "pahomqttc"
-    version = "0.1"
+    version = "0.0.1"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of pahomqttc here>"
+    description = "This recipe file used to build and package binaries of Pahomqtt repository"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
     options = { "shared": [True, False] }

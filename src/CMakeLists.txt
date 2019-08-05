@@ -60,7 +60,7 @@ ELSEIF (UNIX)
     ELSEIF (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
         SET(LIBS_SYSTEM compat pthread)
     ELSE()
-        SET(LIBS_SYSTEM c pthread)
+        SET(LIBS_SYSTEM c)
     ENDIF()
 ENDIF()
 

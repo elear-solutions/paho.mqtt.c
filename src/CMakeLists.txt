@@ -66,6 +66,7 @@ ELSEIF (UNIX)
     ENDIF()
 ENDIF()
 
+
 ## common compilation for libpaho-mqtt3c and libpaho-mqtt3a
 ADD_LIBRARY(common_obj OBJECT ${common_src})
 SET_PROPERTY(TARGET common_obj PROPERTY POSITION_INDEPENDENT_CODE ON)

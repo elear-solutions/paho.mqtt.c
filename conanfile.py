@@ -2,6 +2,7 @@ from conans import ConanFile, CMake, tools
 
 class PahomqttclibConan(ConanFile):
     name = "pahomqttc"
+    version = "0.0.1"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"

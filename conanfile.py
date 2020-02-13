@@ -24,12 +24,9 @@ class PahomqttclibConan(ConanFile):
         del self.settings.compiler.cppstd
 
     def _configure_cmake(self):
-        if tools.cross_building(self.settings) and self.settings.os != "Windows":
-            host = tools.get_gnu_triplet(str(self.settings.os), str(self.settings.arch))
-            tools.replace_in_file("../CMakeLists.txt",
-                                  "execute_process(COMMAND ./configure ",
-                                  "execute_process(COMMAND ./configure --host %s " % host)
         cmake = CMake(self)
+        if (self.settings.os == "Android"):
+            cmake.definitions["Platform"] = "android"
         cmake.configure(source_folder=".")
         return cmake
 

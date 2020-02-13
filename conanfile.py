@@ -15,25 +15,17 @@ class PahomqttclibConan(ConanFile):
     default_options = {key: False for key in options.keys()}
     default_options ["shared"] = False
 
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
-
-    def configure(self):
-        del self.settings.compiler.libcxx
-        del self.settings.compiler.cppstd
-
     def _configure_cmake(self):
         cmake = CMake(self)
-        if (self.settings.os == "Android"):
-            cmake.definitions["Platform"] = "android"
+        cmake.definitions["Platform"] = self.settings.os
         cmake.configure(source_folder=".")
         return cmake
 
     def build(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
+        cmake.definitions["Platform"] = self.settings.os
+        cmake.configure(source_folder=".")
         cmake.build()
-        cmake.install()
 
     def package(self):
         self.copy("*.h", dst="include/pahomqttc", src="package/include/pahomqttc")

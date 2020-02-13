@@ -2,7 +2,7 @@ from conans import ConanFile, CMake, tools
 
 class PahomqttclibConan(ConanFile):
     name = "pahomqttc"
-    version = "0.0.1"
+    version = "1.2.1"
     description = "This recipe file used to build and package binaries of pahomqttc repository"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     url = "https://github.com/elear-solutions/paho.mqtt.c"
@@ -11,11 +11,9 @@ class PahomqttclibConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {
         "shared": [True, False],
-        "fPIC": [True, False]
     }
     default_options = {key: False for key in options.keys()}
     default_options ["shared"] = False
-    default_options ["fPIC"] = True
 
     def config_options(self):
         if self.settings.os == "Windows":

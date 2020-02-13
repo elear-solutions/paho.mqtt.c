@@ -15,12 +15,6 @@ class PahomqttclibConan(ConanFile):
     default_options = {key: False for key in options.keys()}
     default_options ["shared"] = False
 
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.definitions["Platform"] = self.settings.os
-        cmake.configure(source_folder=".")
-        return cmake
-
     def build(self):
         cmake = CMake(self)
         cmake.definitions["Platform"] = self.settings.os

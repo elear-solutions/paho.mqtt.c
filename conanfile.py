@@ -23,7 +23,7 @@ class PahomqttclibConan(ConanFile):
         cmake.install()
 
     def package(self):
-        self.copy("*.h", dst="include/pahomqttc", src="package/include/pahomqttc")
+        self.copy("*.h", dst="include/pahomqttc", src="package/include")
         self.copy("*", dst="lib", src="package/lib", keep_path=False)
 
     def package_info(self):

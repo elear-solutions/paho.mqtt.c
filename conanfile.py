@@ -2,29 +2,29 @@ from conans import ConanFile, CMake, tools
 
 class PahomqttclibConan(ConanFile):
     name = "pahomqttc"
-    license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
+    version = "1.2.1"
     description = "This recipe file used to build and package binaries of pahomqttc repository"
     topics = ("<Put some tag here>", "<here>", "<and here>")
-    settings = "os", "compiler", "build_type", "arch"
-    options = { "shared": [True, False] }
-    default_options = "shared=False"
+    url = "https://github.com/elear-solutions/paho.mqtt.c"
+    license = "<Put the package license here>"
     generators = "cmake"
+    settings = "os", "compiler", "build_type", "arch"
+    options = {
+        "shared": [True, False],
+    }
+    default_options = {key: False for key in options.keys()}
+    default_options ["shared"] = False
 
     def build(self):
         cmake = CMake(self)
-        if (self.settings.os == "Android"):
-            cmake.definitions["Platform"] = "android"
+        cmake.definitions["Platform"] = self.settings.os
         cmake.configure(source_folder=".")
         cmake.build()
+        cmake.install()
 
     def package(self):
-        self.copy("*.h", dst="include", src="src")
-        self.copy("*", dst="lib", src="lib", keep_path=False)
+        self.copy("*.h", dst="include/pahomqttc", src="package/include/pahomqttc")
+        self.copy("*", dst="lib", src="package/lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = [ "paho-mqtt3a" ]
-        self.cpp_info.libs = [ "paho-mqtt3a-static" ]
-        self.cpp_info.libs = [ "paho-mqtt3c" ]
-        self.cpp_info.libs = [ "paho-mqtt3c-static" ]
+        self.cpp_info.libs = [ "paho-mqtt3a", "paho-mqtt3a-static", "paho-mqtt3c", "paho-mqtt3c-static" ]

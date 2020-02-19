@@ -20,6 +20,7 @@ class PahomqttclibConan(ConanFile):
         cmake.definitions["Platform"] = self.settings.os
         cmake.configure(source_folder=".")
         cmake.build()
+        cmake.install()
 
     def package(self):
         self.copy("*.h", dst="include/pahomqttc", src="package/include/pahomqttc")
